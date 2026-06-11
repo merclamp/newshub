@@ -1,0 +1,26 @@
+[project]
+name = "newshub"
+version = "0.1.0"
+description = "News aggregator: FastAPI + Redis + aiogram"
+requires-python = ">=3.12"
+dependencies = [
+    "fastapi>=0.115",
+    "uvicorn[standard]>=0.32",
+    "redis>=5.2",
+    "httpx>=0.28",
+    "feedparser>=6.0.11",
+    "aiogram>=3.15",
+    "pydantic>=2.9",
+    "pydantic-settings>=2.6",
+    "nh3>=0.3.5",
+    "trafilatura>=2.1.0",
+]
+
+[dependency-groups]
+dev = [
+    "pytest>=8.3",
+    "pytest-asyncio>=0.24",
+]
+
+[tool.uv]
+package = false

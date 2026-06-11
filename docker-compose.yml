@@ -1,0 +1,63 @@
+services:
+  redis:
+    image: redis:7-alpine
+    command: ["redis-server", "--appendonly", "yes"]
+    volumes:
+      - redis-data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+    restart: unless-stopped
+
+  api:
+    build: ./backend
+    command: ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
+    environment:
+      REDIS_URL: redis://redis:6379/0
+      CORS_ORIGINS: ${CORS_ORIGINS:-*}
+    ports:
+      - "8000:8000"
+    depends_on:
+      redis:
+        condition: service_healthy
+    restart: unless-stopped
+
+  worker:
+    build: ./backend
+    command: ["python", "-m", "app.worker"]
+    environment:
+      REDIS_URL: redis://redis:6379/0
+      FETCH_INTERVAL_SECONDS: ${FETCH_INTERVAL_SECONDS:-300}
+      ARTICLE_TTL_DAYS: ${ARTICLE_TTL_DAYS:-7}
+    depends_on:
+      redis:
+        condition: service_healthy
+    restart: unless-stopped
+
+  # Запускается только с профилем "bot":  docker compose --profile bot up -d
+  bot:
+    build: ./backend
+    command: ["python", "-m", "app.bot.main"]
+    environment:
+      REDIS_URL: redis://redis:6379/0
+      BOT_TOKEN: ${BOT_TOKEN:-}
+      DIGEST_INTERVAL_HOURS: ${DIGEST_INTERVAL_HOURS:-6}
+      DIGEST_MAX_PER_SOURCE: ${DIGEST_MAX_PER_SOURCE:-5}
+    depends_on:
+      redis:
+        condition: service_healthy
+    profiles: ["bot"]
+    restart: unless-stopped
+
+  frontend:
+    build: ./frontend
+    ports:
+      - "8080:80"
+    depends_on:
+      - api
+    restart: unless-stopped
+
+volumes:
+  redis-data:
