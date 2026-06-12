@@ -71,7 +71,12 @@
         limit: PAGE_SIZE,
         offset,
       });
-      articles = reset ? batch : [...articles, ...batch];
+      if (reset) {
+        articles = batch;
+      } else {
+        const seen = new Set(articles.map((a) => a.id));
+        articles = [...articles, ...batch.filter((a) => !seen.has(a.id))];
+      }
       hasMore = batch.length === PAGE_SIZE;
     } catch (e) {
       error = e.message || 'Не удалось загрузить ленту';
@@ -151,6 +156,7 @@
   <footer class="border-top py-3">
     <div class="container small text-secondary d-flex justify-content-between flex-wrap gap-2">
       <span>NewsHub — агрегатор независимых СМИ</span>
+      <span><a href="https://github.com/newshub" target="_blank" rel="noopener noreferrer">Исходный код</a></span>
     </div>
   </footer>
 {/if}
