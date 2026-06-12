@@ -73,6 +73,13 @@ SOURCES: list[Source] = [
         url="https://www.svoboda.org/rss/",
         homepage="https://www.svoboda.org",
     ),
+    Source(
+        id="ovdinfo",
+        name="ОВД-Инфо",
+        kind="article",
+        url="https://ovd.info/rss.xml",
+        homepage="https://ovd.info",
+    ),
 ]
 
 SOURCES_BY_ID: dict[str, Source] = {s.id: s for s in SOURCES}
