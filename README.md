@@ -2,6 +2,8 @@
 
 Агрегатор новостей независимых СМИ: статьи с сайтов в одной ленте.
 
+Захостингованный экземпляр: [news.sigmachan.ru](https://news.sigmachan.ru/)
+
 ## Стек
 
 - **Backend**: Python 3.12+, [uv](https://docs.astral.sh/uv/), FastAPI, Redis (единственное хранилище)
