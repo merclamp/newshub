@@ -47,7 +47,6 @@
   let sources = $state([]);
   let stats = $state(null);
   let selectedSource = $state(null);
-  let selectedKind = $state(null);
   let loading = $state(false);
   let loadingMore = $state(false);
   let error = $state('');
@@ -69,7 +68,6 @@
       const offset = reset ? 0 : articles.length;
       const batch = await fetchNews({
         source: selectedSource,
-        kind: selectedKind,
         limit: PAGE_SIZE,
         offset,
       });
@@ -83,9 +81,8 @@
     }
   }
 
-  function onFiltersChange({ source, kind }) {
+  function onFiltersChange({ source }) {
     selectedSource = source;
-    selectedKind = kind;
     loadFeed({ reset: true });
   }
 
@@ -109,7 +106,7 @@
   <Header {stats} onrefresh={refresh} />
 
   <main class="container pb-5">
-    <Filters {sources} {selectedSource} {selectedKind} onchange={onFiltersChange} />
+    <Filters {sources} {selectedSource} onchange={onFiltersChange} />
 
     {#if error}
       <div class="alert alert-danger d-flex align-items-center gap-2">

@@ -20,7 +20,7 @@
     </span>
     {#if stats}
       <span class="navbar-text d-none d-md-inline small text-secondary">
-        {stats.total} материалов · {stats.articles} статей · {stats.videos} видео
+        {stats.total} материалов · {stats.articles} статей
       </span>
     {/if}
     <div class="d-flex gap-2">
