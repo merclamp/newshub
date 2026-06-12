@@ -29,7 +29,7 @@ services:
     command: ["python", "-m", "app.worker"]
     environment:
       REDIS_URL: redis://redis:6379/0
-      FETCH_INTERVAL_SECONDS: ${FETCH_INTERVAL_SECONDS:-300}
+      FETCH_INTERVAL_SECONDS: ${FETCH_INTERVAL_SECONDS:-3600}
       ARTICLE_TTL_DAYS: ${ARTICLE_TTL_DAYS:-7}
     depends_on:
       redis:
