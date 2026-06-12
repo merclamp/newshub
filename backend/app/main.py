@@ -2,10 +2,20 @@ from contextlib import asynccontextmanager
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from starlette.middleware.base import BaseHTTPMiddleware
 
 from .api.routes import router
 from .config import get_settings
 from .redis_client import close_redis, get_redis
+
+
+class SecurityHeadersMiddleware(BaseHTTPMiddleware):
+    async def dispatch(self, request, call_next):
+        response = await call_next(request)
+        response.headers["X-Frame-Options"] = "DENY"
+        response.headers["X-Content-Type-Options"] = "nosniff"
+        response.headers["Referrer-Policy"] = "strict-origin-when-cross-origin"
+        return response
 
 
 @asynccontextmanager
@@ -17,19 +27,22 @@ async def lifespan(app: FastAPI):
 
 app = FastAPI(
     title="NewsHub API",
-    description="Агрегатор новостей: статьи и видео независимых СМИ",
+    description="Агрегатор новостей независимых СМИ",
     version="0.1.0",
     lifespan=lifespan,
 )
 
+app.add_middleware(SecurityHeadersMiddleware)
+
 settings = get_settings()
 origins = [o.strip() for o in settings.cors_origins.split(",") if o.strip()]
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=origins or ["*"],
-    allow_credentials=False,
-    allow_methods=["GET"],
-    allow_headers=["*"],
-)
+if origins:
+    app.add_middleware(
+        CORSMiddleware,
+        allow_origins=origins,
+        allow_credentials=False,
+        allow_methods=["GET"],
+        allow_headers=["*"],
+    )
 
 app.include_router(router)

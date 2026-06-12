@@ -19,7 +19,7 @@ class Settings(BaseSettings):
     max_feed_size: int = 1000
 
     # API
-    cors_origins: str = "*"
+    cors_origins: str = ""
 
     @property
     def article_ttl_seconds(self) -> int:

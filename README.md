@@ -79,7 +79,7 @@ npm run dev                                   # → :5173
 | `REDIS_URL` | `redis://localhost:6379/0` | адрес Redis |
 | `FETCH_INTERVAL_SECONDS` | `3600` | период опроса источников (сек) |
 | `ARTICLE_TTL_DAYS` | `7` | сколько хранить материалы |
-| `CORS_ORIGINS` | `*` | разрешённые CORS-источники |
+| `CORS_ORIGINS` | — | разрешённые CORS-источники через запятую |
 
 ## Как добавить источник
 
