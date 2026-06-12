@@ -22,7 +22,7 @@
 | Радио Свобода | ✓ |
 | ОВД-Инфо | ✓ |
 
-Список источников: `backend/app/sources.py`.
+Список источников: `backend/app/sources_data.py`.
 
 ## Быстрый старт (Docker)
 
@@ -83,7 +83,7 @@ npm run dev                                   # → :5173
 
 ## Как добавить источник
 
-Добавьте запись в `backend/app/sources.py`:
+Добавьте запись в `backend/app/sources_data.py`:
 
 ```python
 Source(id="my-source", name="Моё СМИ", kind="article",
