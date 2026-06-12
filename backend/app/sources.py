@@ -59,6 +59,20 @@ SOURCES: list[Source] = [
         url="https://newsmaker.md/feed",
         homepage="https://newsmaker.md",
     ),
+    Source(
+        id="currenttime",
+        name="Настоящее Время",
+        kind="article",
+        url="https://www.currenttime.tv/rss/",
+        homepage="https://www.currenttime.tv",
+    ),
+    Source(
+        id="svoboda",
+        name="Радио Свобода",
+        kind="article",
+        url="https://www.svoboda.org/rss/",
+        homepage="https://www.svoboda.org",
+    ),
 ]
 
 SOURCES_BY_ID: dict[str, Source] = {s.id: s for s in SOURCES}
