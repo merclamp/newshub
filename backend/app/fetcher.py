@@ -47,8 +47,7 @@ def _entry_published(entry) -> datetime:
     return datetime.now(timezone.utc)
 
 
-def _entry_image(entry, raw_summary: str) -> str:
-    # YouTube / Media RSS thumbnails
+def _entry_image(entry, raw_summary: str, entry_content: str) -> str:
     thumbs = getattr(entry, "media_thumbnail", None) or []
     for t in thumbs:
         if t.get("url"):
@@ -60,12 +59,18 @@ def _entry_image(entry, raw_summary: str) -> str:
     for enc in getattr(entry, "enclosures", None) or []:
         if str(enc.get("type", "")).startswith("image") and enc.get("href"):
             return enc["href"]
-    match = IMG_RE.search(raw_summary)
-    return match.group(1) if match else ""
+    for text in (entry_content,
+                 getattr(entry, "description", "") or "",
+                 raw_summary):
+        if text:
+            match = IMG_RE.search(text)
+            if match:
+                return match.group(1)
+    return ""
 
 
 def _entry_content(entry) -> str:
-    """Full article body from RSS, if the feed provides it (content:encoded)."""
+    """Full article body from RSS (content:encoded) or description as fallback."""
     for c in getattr(entry, "content", None) or []:
         value = c.get("value") if isinstance(c, dict) else getattr(c, "value", "")
         if value and len(value) > 300:
@@ -84,6 +89,20 @@ def _entry_summary(entry) -> str:
     return raw
 
 
+def _resolve_url(image_url: str, source: Source) -> str:
+    if not image_url:
+        return ""
+    if image_url.startswith("http://") or image_url.startswith("https://"):
+        return image_url
+    if image_url.startswith("//"):
+        return "https:" + image_url
+    if image_url.startswith("/"):
+        base = source.homepage.rstrip("/")
+        return base + image_url
+    base = source.homepage.rstrip("/")
+    return base + "/" + image_url
+
+
 def parse_feed(source: Source, content: bytes) -> list[Article]:
     parsed = feedparser.parse(content)
     articles: list[Article] = []
@@ -96,9 +115,10 @@ def parse_feed(source: Source, content: bytes) -> list[Article]:
         summary = strip_html(raw_summary)
         if len(summary) > SUMMARY_MAX_LEN:
             summary = summary[: SUMMARY_MAX_LEN - 1].rsplit(" ", 1)[0] + "…"
-        content = ""
+        entry_content = ""
         if source.kind == "article":
-            content = sanitize_html(_entry_content(entry))
+            entry_content = _entry_content(entry)
+        raw_image = _entry_image(entry, raw_summary, entry_content)
         articles.append(
             Article(
                 id=make_id(url),
@@ -108,8 +128,8 @@ def parse_feed(source: Source, content: bytes) -> list[Article]:
                 title=title,
                 url=url,
                 summary=summary,
-                content=content,
-                image=_entry_image(entry, raw_summary),
+                content=sanitize_html(entry_content),
+                image=_resolve_url(raw_image, source),
                 published=_entry_published(entry),
             )
         )
