@@ -1,7 +1,7 @@
 [project]
 name = "newshub"
 version = "0.1.0"
-description = "News aggregator: FastAPI + Redis + aiogram"
+description = "News aggregator: FastAPI + Redis"
 requires-python = ">=3.12"
 dependencies = [
     "fastapi>=0.115",
@@ -9,7 +9,6 @@ dependencies = [
     "redis>=5.2",
     "httpx>=0.28",
     "feedparser>=6.0.11",
-    "aiogram>=3.15",
     "pydantic>=2.9",
     "pydantic-settings>=2.6",
     "nh3>=0.3.5",

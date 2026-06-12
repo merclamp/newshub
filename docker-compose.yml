@@ -36,21 +36,6 @@ services:
         condition: service_healthy
     restart: unless-stopped
 
-  # Запускается только с профилем "bot":  docker compose --profile bot up -d
-  bot:
-    build: ./backend
-    command: ["python", "-m", "app.bot.main"]
-    environment:
-      REDIS_URL: redis://redis:6379/0
-      BOT_TOKEN: ${BOT_TOKEN:-}
-      DIGEST_INTERVAL_HOURS: ${DIGEST_INTERVAL_HOURS:-6}
-      DIGEST_MAX_PER_SOURCE: ${DIGEST_MAX_PER_SOURCE:-5}
-    depends_on:
-      redis:
-        condition: service_healthy
-    profiles: ["bot"]
-    restart: unless-stopped
-
   frontend:
     build: ./frontend
     ports:

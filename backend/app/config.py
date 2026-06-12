@@ -21,12 +21,6 @@ class Settings(BaseSettings):
     # API
     cors_origins: str = "*"
 
-    # Telegram digest bot
-    bot_token: str = ""
-    digest_interval_hours: int = 6
-    digest_max_per_source: int = 5
-    digest_lookback_hours_default: int = 24
-
     @property
     def article_ttl_seconds(self) -> int:
         return self.article_ttl_days * 86400

@@ -79,7 +79,6 @@ def _entry_summary(entry) -> str:
         raw = entry.summary
     elif getattr(entry, "description", None):
         raw = entry.description
-    # YouTube puts the description in media:group
     elif getattr(entry, "media_description", None):
         raw = entry.media_description
     return raw

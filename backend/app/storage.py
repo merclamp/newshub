@@ -29,8 +29,6 @@ def k_feed_kind(kind: str) -> str:
     return f"{PREFIX}:feed:kind:{kind}"
 
 
-K_SUBSCRIBERS = f"{PREFIX}:digest:subscribers"
-
 async def save_articles(r: redis.Redis, articles: list[Article]) -> int:
     """Store articles that were not seen before. Returns number of new ones."""
     settings = get_settings()
@@ -143,27 +141,3 @@ async def get_sources_status(r: redis.Redis) -> list[SourceStatus]:
             )
         )
     return result
-
-async def add_subscriber(r: redis.Redis, chat_id: int) -> bool:
-    return bool(await r.sadd(K_SUBSCRIBERS, str(chat_id)))
-
-
-async def remove_subscriber(r: redis.Redis, chat_id: int) -> bool:
-    return bool(await r.srem(K_SUBSCRIBERS, str(chat_id)))
-
-
-async def get_subscribers(r: redis.Redis) -> list[int]:
-    return [int(x) for x in await r.smembers(K_SUBSCRIBERS)]
-
-
-async def is_subscriber(r: redis.Redis, chat_id: int) -> bool:
-    return bool(await r.sismember(K_SUBSCRIBERS, str(chat_id)))
-
-
-async def get_last_digest_ts(r: redis.Redis, chat_id: int) -> float | None:
-    val = await r.get(f"{PREFIX}:digest:last:{chat_id}")
-    return float(val) if val else None
-
-
-async def set_last_digest_ts(r: redis.Redis, chat_id: int, ts: float) -> None:
-    await r.set(f"{PREFIX}:digest:last:{chat_id}", repr(ts))
