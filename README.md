@@ -18,8 +18,8 @@ cp backend/sources.example.json backend/sources.json
 docker compose up -d --build
 ```
 
-- Веб-интерфейс: http://localhost:8080
-- API (Swagger): http://localhost:8000/docs
+- Веб-интерфейс: http://localhost
+- API (Swagger): http://localhost/docs
 
 ## Архитектура
 
