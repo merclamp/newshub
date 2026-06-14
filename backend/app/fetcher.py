@@ -21,14 +21,9 @@ USER_AGENT = (
 
 TAG_RE = re.compile(r"<[^>]+>")
 IMG_RE = re.compile(r'<img[^>]+src=["\']([^"\']+)["\']', re.IGNORECASE)
-OG_IMAGE_RE = re.compile(
-    r'<meta\s+property=["\']og:image["\']\s+content=["\']([^"\']+)["\']',
-    re.IGNORECASE,
-)
 WS_RE = re.compile(r"\s+")
 
 SUMMARY_MAX_LEN = 500
-OG_IMAGE_FETCH_TIMEOUT = 12
 
 
 def make_id(url: str) -> str:
@@ -168,42 +163,13 @@ async def _stream_fetch(client: httpx.AsyncClient, source: Source) -> list[Artic
     return await asyncio.to_thread(parse_feed, source, raw)
 
 
-async def _fetch_og_image(client: httpx.AsyncClient, url: str) -> str:
-    """Fetch og:image meta tag from an article page. Returns empty on failure."""
-    try:
-        resp = await client.get(url)
-        resp.raise_for_status()
-        match = OG_IMAGE_RE.search(resp.text)
-        if match:
-            return match.group(1).strip()
-    except Exception:  # noqa: BLE001
-        pass
-    return ""
-
-
 async def fetch_source(client: httpx.AsyncClient, source: Source) -> list[Article]:
     """Download and parse a single feed. Raises on HTTP errors."""
     if source.stream_timeout > 0:
-        articles = await _stream_fetch(client, source)
-    else:
-        resp = await client.get(source.url)
-        resp.raise_for_status()
-        articles = await asyncio.to_thread(parse_feed, source, resp.content)
-    missing_img = [a for a in articles if not a.image]
-    if missing_img:
-        async with httpx.AsyncClient(
-            timeout=OG_IMAGE_FETCH_TIMEOUT,
-            follow_redirects=True,
-            headers={"User-Agent": USER_AGENT, "Accept-Language": "ru, en;q=0.8"},
-        ) as og_client:
-            semaphore = asyncio.Semaphore(4)
-            async def fill_one(article: Article):
-                async with semaphore:
-                    image = await _fetch_og_image(og_client, article.url)
-                    if image:
-                        article.image = _resolve_url(image, source)
-            await asyncio.gather(*(fill_one(a) for a in missing_img), return_exceptions=True)
-    return articles
+        return await _stream_fetch(client, source)
+    resp = await client.get(source.url)
+    resp.raise_for_status()
+    return await asyncio.to_thread(parse_feed, source, resp.content)
 
 
 async def fetch_all(sources: list[Source]) -> dict[str, list[Article] | Exception]:
