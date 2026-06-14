@@ -1,0 +1,16 @@
+[
+  {
+    "id": "example-bbc",
+    "name": "BBC News (пример)",
+    "kind": "article",
+    "url": "https://feeds.bbci.co.uk/news/rss.xml",
+    "homepage": "https://www.bbc.com/news"
+  },
+  {
+    "id": "example-habr",
+    "name": "Хабр (пример)",
+    "kind": "article",
+    "url": "https://habr.com/ru/rss/articles/",
+    "homepage": "https://habr.com/ru/"
+  }
+]

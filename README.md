@@ -24,12 +24,13 @@
 | Радио Свобода | ✓ |
 | ОВД-Инфо | ✓ |
 
-Список источников: `backend/app/sources_data.py`.
+Список источников: `backend/sources.json` (см. `backend/sources.example.json`).
 
 ## Быстрый старт (Docker)
 
 ```bash
-cp .env.example .env        # при необходимости отредактируйте
+cp .env.example .env                      # при необходимости отредактируйте
+cp backend/sources.example.json backend/sources.json
 docker compose up -d --build
 ```
 
@@ -79,15 +80,23 @@ npm run dev                                   # → :5173
 | Переменная | По умолчанию | Описание |
 |---|---|---|
 | `REDIS_URL` | `redis://localhost:6379/0` | адрес Redis |
+| `SOURCES_FILE` | `backend/sources.json` | путь к JSON со списком источников |
 | `FETCH_INTERVAL_SECONDS` | `3600` | период опроса источников (сек) |
 | `ARTICLE_TTL_DAYS` | `7` | сколько хранить материалы |
 | `CORS_ORIGINS` | — | разрешённые CORS-источники через запятую |
 
 ## Как добавить источник
 
-Добавьте запись в `backend/app/sources_data.py`:
+Скопируйте `backend/sources.example.json` в `backend/sources.json` и добавьте запись:
 
-```python
-Source(id="my-source", name="Моё СМИ", kind="article",
-       url="https://example.org/feed/", homepage="https://example.org"),
+```json
+{
+  "id": "my-source",
+  "name": "Моё СМИ",
+  "kind": "article",
+  "url": "https://example.org/feed/",
+  "homepage": "https://example.org"
+}
 ```
+
+Необязательные поля: `stream_timeout` (число, для проблемных фидов), `enabled` (bool, по умолчанию `true`).

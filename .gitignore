@@ -10,6 +10,7 @@ dist/
 
 # Env / secrets
 .env
+sources.json
 
 # IDE
 .idea/

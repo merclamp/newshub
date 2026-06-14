@@ -17,6 +17,9 @@ services:
     environment:
       REDIS_URL: redis://redis:6379/0
       CORS_ORIGINS: ${CORS_ORIGINS:-}
+      SOURCES_FILE: ${SOURCES_FILE:-/app/sources.json}
+    volumes:
+      - ./backend/sources.json:/app/sources.json:ro
     expose:
       - "8000"
     healthcheck:
@@ -36,6 +39,9 @@ services:
       REDIS_URL: redis://redis:6379/0
       FETCH_INTERVAL_SECONDS: ${FETCH_INTERVAL_SECONDS:-3600}
       ARTICLE_TTL_DAYS: ${ARTICLE_TTL_DAYS:-7}
+      SOURCES_FILE: ${SOURCES_FILE:-/app/sources.json}
+    volumes:
+      - ./backend/sources.json:/app/sources.json:ro
     depends_on:
       redis:
         condition: service_healthy

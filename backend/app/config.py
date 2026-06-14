@@ -10,6 +10,7 @@ class Settings(BaseSettings):
     redis_url: str = "redis://localhost:6379/0"
 
     # Fetcher
+    sources_file: str = "sources.json"
     fetch_interval_seconds: int = 3600
     fetch_timeout_seconds: int = 25
     fetch_concurrency: int = 8
