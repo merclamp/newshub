@@ -155,7 +155,7 @@
 
   <footer class="border-top py-3">
     <div class="container small text-secondary d-flex justify-content-between flex-wrap gap-2">
-      <span>NewsHub — агрегатор независимых СМИ</span>
+      <span>NewsHub — агрегатор СМИ с открытым исходным кодом</span>
       <span><a href="https://github.com/newshub" target="_blank" rel="noopener noreferrer">Исходный код</a></span>
     </div>
   </footer>
