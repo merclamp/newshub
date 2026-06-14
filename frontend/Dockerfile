@@ -12,4 +12,3 @@ COPY --from=build /app/dist /usr/share/nginx/html
 EXPOSE 80
 
 RUN chown -R nginx:nginx /usr/share/nginx/html /var/cache/nginx /var/log/nginx
-USER nginx
