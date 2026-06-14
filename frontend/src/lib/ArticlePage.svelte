@@ -1,18 +1,16 @@
 <script>
-  import { fetchArticle, timeAgo, youtubeId } from './api.js';
+  import { fetchArticle, timeAgo } from './api.js';
 
   let { id, initial = null, onback } = $props();
 
   // svelte-ignore state_referenced_locally
   let article = $state(initial);
   // svelte-ignore state_referenced_locally
-  let loading = $state(!article || (article?.kind === 'article' && !article?.content));
+  let loading = $state(!article || !article.content);
   let error = $state('');
 
-  let videoId = $derived(article?.kind === 'video' ? youtubeId(article.url) : null);
-
   $effect(() => {
-    if (!article || article.id !== id || (article.kind === 'article' && !article.content)) {
+    if (!article || article.id !== id || !article.content) {
       loading = true;
       error = '';
       fetchArticle(id)
@@ -68,22 +66,7 @@
 
       <h1 class="mb-4">{article.title}</h1>
 
-      {#if article.kind === 'video'}
-        {#if videoId}
-          <div class="ratio ratio-16x9 mb-4 rounded overflow-hidden">
-            <iframe
-              src="https://www.youtube-nocookie.com/embed/{videoId}"
-              title={article.title}
-              frameborder="0"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-              allowfullscreen
-            ></iframe>
-          </div>
-        {/if}
-        {#if article.summary}
-          <p class="text-secondary">{article.summary}</p>
-        {/if}
-      {:else if loading && !article.content}
+      {#if loading && !article.content}
         <div class="text-center py-5">
           <div class="spinner-border text-primary" role="status"></div>
           <p class="mt-3 text-secondary">Загружаем полный текст…</p>
@@ -93,9 +76,6 @@
           {@html article.content}
         </div>
       {:else}
-        {#if article.image}
-          <img src={article.image} class="img-fluid rounded mb-3" alt="" />
-        {/if}
         {#if article.summary}
           <p>{article.summary}</p>
         {/if}
@@ -108,11 +88,7 @@
       <hr class="my-4" />
       <div class="d-flex flex-wrap gap-2 justify-content-between">
         <a class="btn btn-primary" href={article.url} target="_blank" rel="noopener noreferrer">
-          {#if article.kind === 'video'}
-            <i class="bi bi-youtube me-1"></i>Открыть на YouTube
-          {:else}
-            <i class="bi bi-box-arrow-up-right me-1"></i>Читать оригинал
-          {/if}
+          <i class="bi bi-box-arrow-up-right me-1"></i>Читать оригинал
         </a>
         <button class="btn btn-outline-secondary" onclick={onback}>
           <i class="bi bi-arrow-left me-1"></i>К ленте

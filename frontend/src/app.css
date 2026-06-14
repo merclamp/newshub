@@ -12,11 +12,6 @@ body {
   box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.35);
 }
 
-.news-card .card-img-top {
-  object-fit: cover;
-  height: 180px;
-}
-
 .news-card .card-title a {
   text-decoration: none;
   color: inherit;
@@ -43,16 +38,6 @@ body {
 
 .source-chips .btn {
   margin-right: 0.4rem;
-}
-
-.video-badge {
-  position: absolute;
-  top: 0.5rem;
-  right: 0.5rem;
-}
-
-.news-card .card-img-top[role='button'] {
-  cursor: pointer;
 }
 
 /* Article reader page */

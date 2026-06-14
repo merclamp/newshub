@@ -26,11 +26,6 @@ export function fetchSources() {
   return getJSON('/sources');
 }
 
-export function youtubeId(url) {
-  const m = url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/shorts\/)([\w-]{11})/);
-  return m ? m[1] : null;
-}
-
 export function fetchStats() {
   return getJSON('/stats');
 }
