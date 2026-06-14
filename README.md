@@ -19,7 +19,17 @@ docker compose up -d --build
 ```
 
 - Веб-интерфейс: http://localhost
-- API (Swagger): http://localhost/docs
+
+### Режим разработки
+
+Добавляет порт 8000 (API напрямую) и CORS для Vite dev-сервера:
+
+```bash
+docker compose -f docker-compose.yml -f docker-compose.dev.yml up -d --build
+```
+
+- Веб-интерфейс: http://localhost:8080
+- API (Swagger): http://localhost:8000/docs
 
 ## Архитектура
 
@@ -50,8 +60,8 @@ docker compose up -d --build
 # Backend
 cd backend
 uv sync
-uv run uvicorn app.main:app --reload          # API → :8000
-uv run python -m app.worker                   # сборщик
+SOURCES_FILE=sources.json uv run uvicorn app.main:app --reload       # API → :8000
+SOURCES_FILE=sources.json uv run python -m app.worker                # сборщик
 
 # Frontend (проксирует /api на :8000)
 cd frontend
