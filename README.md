@@ -10,22 +10,6 @@
 - **Frontend**: Svelte 5, Vite, Bootstrap 5
 - **Инфраструктура**: Docker, Docker Compose
 
-## Источники
-
-| Источник | Статьи (RSS) |
-|---|---|
-| DW Россия | ✓ |
-| Meduza | ✓ |
-| Дождь | ✓ |
-| Ходорковский | ✓ |
-| Рабкор | ✓ |
-| NewsMaker | ✓ |
-| Настоящее Время | ✓ |
-| Радио Свобода | ✓ |
-| ОВД-Инфо | ✓ |
-
-Список источников: `backend/sources.json` (см. `backend/sources.example.json`).
-
 ## Быстрый старт (Docker)
 
 ```bash
